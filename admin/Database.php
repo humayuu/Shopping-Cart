@@ -4,6 +4,7 @@
 
 class Database extends Auth
 {
+    public $result = [];
 
 
     /**
@@ -15,6 +16,7 @@ class Database extends Auth
 
         $columns = implode(', ', array_keys($params));
         $placeHolders = ':' . implode(', :', array_keys($params));
+        $value = implode(', ', $params);
 
         try {
 
@@ -80,26 +82,27 @@ class Database extends Auth
      * Function for Fetch single Data from Database
      */
 
+
     public function select($table, $rows = '*', $join = null, $where = null, $order = null, $limit = null)
     {
         if (!$this->tableExists($table)) return false;
 
+        $sql = "SELECT $rows FROM $table";
+
+        if ($join  !== null)  $sql  .= " $join";
+        if ($where  !== null) $sql  .= " WHERE $where";
+        if ($order !== null)  $sql  .= " ORDER BY $order";
+        if ($limit !== null)  $sql  .= " LIMIT $limit";
 
         try {
 
-            $stmt = $this->conn->prepare("SELECT $rows FROM $table");
-
-            if ($join !== null) $stmt  .= " $join";
-            if ($where !== null) $stmt .= " WHERE $where";
-            if ($order !== null) $stmt .= " ORDER BY $order";
-            if ($limit !== null) $stmt .= " LIMIT $limit";
-
+            $stmt = $this->conn->prepare($sql);
             $stmt->execute();
-            $result = $stmt->fetch();
+            $this->result = $stmt->fetch(); // Single Row
 
-            return $result;
+            return $this->result;
         } catch (Exception $e) {
-            $this->errors[] = 'Error in fetch single Data ' . $e->getMessage();
+            $this->errors[] = 'Error in fetch All Data ' . $e->getMessage();
             return false;
         }
     }
@@ -109,25 +112,26 @@ class Database extends Auth
      * Function for Fetch all Data from Database
      */
 
-    public function selectAll($table, $rows = '*', $join = null, $order = null, $limit = null)
+    public function selectAll($table, $rows = '*', $join = null, $where = null, $order = null, $limit = null)
     {
         if (!$this->tableExists($table)) return false;
 
+        $sql = "SELECT $rows FROM $table";
+
+        if ($join  !== null)  $sql  .= " $join";
+        if ($where  !== null) $sql  .= " WHERE $where";
+        if ($order !== null)  $sql  .= " ORDER BY $order";
+        if ($limit !== null)  $sql  .= " LIMIT $limit";
 
         try {
 
-            $stmt = $this->conn->prepare("SELECT $rows FROM $table");
-
-            if ($join !== null) $stmt  .= " $join";
-            if ($order !== null) $stmt .= " ORDER BY $order";
-            if ($limit !== null) $stmt .= " LIMIT $limit";
-
+            $stmt = $this->conn->prepare($sql);
             $stmt->execute();
-            $result = $stmt->fetchAll();
+            $this->result = $stmt->fetchAll();
 
-            return $result;
+            return $this->result;
         } catch (Exception $e) {
-            $this->errors[] = 'Error in fetch single Data ' . $e->getMessage();
+            $this->errors[] = 'Error in fetch All Data ' . $e->getMessage();
             return false;
         }
     }
@@ -141,12 +145,15 @@ class Database extends Auth
     {
         if (!$this->tableExists($table)) return false;
 
+        $sql = "DELETE FROM $table";
+        if ($where !== null) $sql .= " WHERE $where";
+
         try {
 
             $this->conn->beginTransaction();
 
-            $stmt = $this->conn->prepare("DELETE FROM $table");
-            if ($where !== null) $stmt .= " WHERE $where";
+            $stmt = $this->conn->prepare($sql);
+
             $result = $stmt->execute();
 
             if ($result) {
@@ -201,4 +208,31 @@ class Database extends Auth
             return $result;
         }
     }
+
+
+    /**
+     * Function for Validations 
+     */
+    public function validate($fields = [])
+    {
+        if (empty($fields)) {
+            $this->errors[] = 'All fields are required';
+            return false;
+        }
+
+        foreach ($fields as $field) {
+            if (empty($field)) {
+                $this->errors[] = 'All fields are required';
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+
+    /**
+     *  Function for Pagination
+     */
+    public function pagination() {}
 } // Class ends here

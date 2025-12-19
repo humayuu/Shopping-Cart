@@ -1,3 +1,35 @@
+<?php
+session_start();
+require 'config.php';
+
+$redirect = './product/index.php';
+$conn->loggedIn($redirect);
+
+// Generate CSRF Token
+if (empty($_SESSION['__csrf'])) {
+    $_SESSION['__csrf'] = bin2hex(random_bytes(32));
+}
+
+
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['isSubmitted'])) {
+    // Verify CSRF token
+    if (!hash_equals($_SESSION['__csrf'], $_POST['__csrf'])) {
+        header('Location: ' . $_SERVER['PHP_SELF']);
+        exit;
+    }
+
+    $table = 'admin_user_tbl';
+    $email = htmlspecialchars($_POST['email']);
+    $password = $_POST['password'];
+
+
+    $conn->attempt($table, $email, $password, $redirect);
+}
+
+
+
+?>
 <!doctype html>
 <html lang="en">
 
@@ -23,8 +55,14 @@
                             </div>
                             <h4 class="fw-semibold text-dark">Shopping Cart</h4>
                             <p class="text-muted mb-0">Sign In to Dashboard</p>
+                            <?php if ($conn->getErrors()): ?>
+                            <?php foreach ($conn->getErrors() as $error): ?>
+                            <div class="alert alert-danger"><?= $error ?></div>
+                            <?php endforeach; ?>
+                            <?php endif; ?>
                         </div>
-                        <form>
+                        <form method="post" action="<?= htmlspecialchars($_SERVER['PHP_SELF']) ?>">
+                            <input type="hidden" name="__csrf" value="<?= htmlspecialchars($_SESSION['__csrf']) ?>">
                             <div class="mb-3">
                                 <label for="username" class="form-label fw-medium">Email</label>
                                 <div class="input-group">
