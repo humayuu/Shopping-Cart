@@ -55,15 +55,18 @@ class Database extends Auth
 
         $toString = implode(', ', $setClauses);
 
+        $sql = "UPDATE $table SET $toString";
+        if ($where !== null) {
+            $sql .= " WHERE $where";
+        }
+
         try {
 
             $this->conn->beginTransaction();
 
 
-            $stmt = $this->conn->prepare("UPDATE $table SET $toString");
-            if ($where !== null) {
-                $stmt .= " WHERE $where";
-            }
+            $stmt = $this->conn->prepare($sql);
+
             $result = $stmt->execute($params);
 
             if ($result) {
@@ -83,7 +86,7 @@ class Database extends Auth
      */
 
 
-    public function select($table, $rows = '*', $join = null, $where = null, $order = null, $limit = null)
+    public function select($table, $rows = '*', $join = null, $where = null, $order = null, $limit = null, $offset = null)
     {
         if (!$this->tableExists($table)) return false;
 
@@ -92,7 +95,7 @@ class Database extends Auth
         if ($join  !== null)  $sql  .= " $join";
         if ($where  !== null) $sql  .= " WHERE $where";
         if ($order !== null)  $sql  .= " ORDER BY $order";
-        if ($limit !== null)  $sql  .= " LIMIT $limit";
+        if ($limit !== null || $offset !== null)  $sql  .= " LIMIT $offset $limit";
 
         try {
 
@@ -112,7 +115,7 @@ class Database extends Auth
      * Function for Fetch all Data from Database
      */
 
-    public function selectAll($table, $rows = '*', $join = null, $where = null, $order = null, $limit = null)
+    public function selectAll($table, $rows = '*', $join = null, $where = null, $order = null, $limit = null, $offset = null)
     {
         if (!$this->tableExists($table)) return false;
 
@@ -121,7 +124,14 @@ class Database extends Auth
         if ($join  !== null)  $sql  .= " $join";
         if ($where  !== null) $sql  .= " WHERE $where";
         if ($order !== null)  $sql  .= " ORDER BY $order";
-        if ($limit !== null)  $sql  .= " LIMIT $limit";
+
+        if ($limit !== null) {
+            $sql .= " LIMIT $limit";
+
+            if ($offset !== null) {
+                $sql .= " OFFSET $offset";
+            }
+        }
 
         try {
 
@@ -234,5 +244,50 @@ class Database extends Auth
     /**
      *  Function for Pagination
      */
-    public function pagination() {}
+    public function paginator($table, $pageNo, $limit)
+    {
+        if (!$this->tableExists($table)) return false;
+
+        if (empty($pageNo)) {
+            $this->errors[] = 'Page no is required';
+            return false;
+        }
+
+        $stmt = $this->conn->prepare("SELECT COUNT(*) AS total FROM $table");
+        $stmt->execute();
+        $totalRows =   $stmt->fetch()['total'];
+        $totalPages = ceil($totalRows / $limit);
+
+        echo '<nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-end">';
+
+        if ($pageNo > 1) {
+            echo ' <li class="page-item">
+                <a href="?page=' . ($pageNo - 1) . '" class="page-link">Previous</a>
+            </li>';
+        } else {
+            echo '<li class="page-item disabled">
+                <span class="page-link">Previous</span>
+            </li>';
+        }
+
+        for ($i = 1; $i <= $totalPages; $i++) {
+            $activeClass = ($i == $pageNo) ? 'active' : '';
+            echo "<li class='page-item'><a class='page-link " . $activeClass . "' href='?page=" . $i . "'>$i</a></li>";
+        }
+
+
+        if ($pageNo < $totalPages) {
+            echo ' <li class="page-item">
+                <a href="?page=' . ($pageNo + 1) . '" class="page-link">Next</a>
+            </li>';
+        } else {
+            echo '<li class="page-item disabled">
+                <span class="page-link">Next</span>
+            </li>';
+        }
+
+        echo '</ul>
+          </nav>';
+    }
 } // Class ends here

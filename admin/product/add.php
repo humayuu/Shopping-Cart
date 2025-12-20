@@ -64,9 +64,9 @@ require 'header.php';
                         <div class="card border shadow-none w-100">
                             <div class="card-body">
                                 <?php if ($database->getErrors()): ?>
-                                    <?php foreach ($database->getErrors() as $error): ?>
-                                        <div class="alert alert-danger"><?= $error ?></div>
-                                    <?php endforeach; ?>
+                                <?php foreach ($database->getErrors() as $error): ?>
+                                <div class="alert alert-danger"><?= $error ?></div>
+                                <?php endforeach; ?>
                                 <?php endif; ?>
                                 <form method="post" action="<?= htmlspecialchars($_SERVER['PHP_SELF']) ?>"
                                     class="row g-3" enctype="multipart/form-data">
@@ -95,7 +95,7 @@ require 'header.php';
                                         <input type="file" name="image" class="form-control">
                                     </div>
                                     <div class="col-12">
-                                        <div class="d-grid">
+                                        <div>
                                             <button name="issSubmitted" class="btn btn-primary">Add Product</button>
                                             <a class="btn btn-outline-dark m-3" href="index.php">Cancel</a>
                                         </div>

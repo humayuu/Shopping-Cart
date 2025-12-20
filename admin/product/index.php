@@ -7,9 +7,20 @@ $rows = '*';
 $join = null;
 $where = null;
 $order = 'id DESC';
-$limit = null;
+$limit = 5;
 
-$products = $database->selectAll($table, $rows, $join, $where, $order, $limit);
+
+if (isset($_GET['page'])) {
+    $pageNo = $_GET['page'];
+} else {
+    $pageNo = 1;
+}
+
+$offset = ($pageNo - 1) * $limit;
+
+
+$products = $database->selectAll($table, $rows, $join, $where, $order, $limit, $offset);
+
 
 
 require 'header.php';
@@ -74,6 +85,9 @@ require 'header.php';
                                         <?php endforeach; ?>
                                     </tbody>
                                 </table>
+                                <?php
+                                $database->paginator($table, $pageNo, $limit);
+                                ?>
                             </div>
                         </div>
                     </div>
@@ -81,7 +95,6 @@ require 'header.php';
             </div>
             <!--end row-->
         </div>
-    </div>
     </div>
 </main>
 
