@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['issSubmitted'])) {
     $code = htmlspecialchars($_POST['code']);
     $price = htmlspecialchars($_POST['price']);
     $description = htmlspecialchars($_POST['description']);
-    $image = $database->file('image', 'uploads/products/');
+    $image = $database->file('image', '/uploads/product/');
     $redirect = 'index.php';
 
     // Validations

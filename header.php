@@ -60,7 +60,7 @@
                     <a href="cart.php"
                         class="text-muted display-5 d-flex align-items-center justify-content-center"><span><i
                                 class="fas fa-shopping-cart"></i></span>
-                        <span class="text-dark ms-2">$0.00</span></a>
+                        <span class="text-dark ms-2">$ <?= count($_SESSION['cart']) ?></span></a>
                 </div>
             </div>
         </div>

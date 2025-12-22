@@ -290,4 +290,10 @@ class Database extends Auth
         echo '</ul>
           </nav>';
     }
+
+    /**
+     * Function for Add to cart
+     */
+
+    public function AddToCart() {}
 } // Class ends here
