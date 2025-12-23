@@ -29,26 +29,36 @@ $products = $database->selectAll($table, $rows, $join, $where, $order, $limit, $
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['issSubmitted'])) {
     // Verify csrf token
-    if (!hash_equals($_SESSION['__csrf'], $_POST['__csrf'])) {
+    if (!isset($_SESSION['__csrf']) || !hash_equals($_SESSION['__csrf'], $_POST['__csrf'])) {
         header('Location: ' . $_SERVER['PHP_SELF']);
         exit;
     }
 
-    $id = htmlspecialchars($_POST['id']);
+    $id = (int) $_POST['id'];
     $name = htmlspecialchars($_POST['name']);
     $price = htmlspecialchars($_POST['price']);
     $img = htmlspecialchars($_POST['image']);
+    $subTotal = 0;
 
-    $productData = [
-        'id' => $id,
-        'name' => $name,
-        'price' => $price,
-        'image' => $img,
-    ];
+    if (isset($_SESSION['cart'][$id])) {
+        $_SESSION['cart'][$id]['quantity']++;
+        $_SESSION['cart'][$id]['subTotal'] = $_SESSION['cart'][$id]['price'] * $_SESSION['cart'][$id]['quantity'];
+    } else {
 
-    $_SESSION['cart'][$id] = [$productData];
+        $_SESSION['cart'][$id] = [
+            'id' => $id,
+            'name' => $name,
+            'price' => $price,
+            'image' => $img,
+            'subTotal' => $price * 1,
+            'quantity' => 1,
+        ];
+    }
 }
-print_r($_SESSION['cart']);
+
+// echo '<pre>';
+// var_dump($_SESSION['cart']);
+// echo '</pre>';
 require './header.php';
 ?>
 

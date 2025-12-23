@@ -55,12 +55,18 @@
                     </a>
                 </div>
             </div>
+            <?php
+            $total = 0;
+            foreach ($_SESSION['cart'] as $product) {
+                $total = $total + $product['price'] * $product['quantity'];
+            }
+            ?>
             <div class="col-md-4 col-lg-3 text-center text-lg-end">
                 <div class="d-inline-flex align-items-center">
                     <a href="cart.php"
                         class="text-muted display-5 d-flex align-items-center justify-content-center"><span><i
                                 class="fas fa-shopping-cart"></i></span>
-                        <span class="text-dark ms-2">$ <?= count($_SESSION['cart']) ?></span></a>
+                        <span class="text-dark ms-2">$ <?= number_format($total, 2) ?></span></a>
                 </div>
             </div>
         </div>
