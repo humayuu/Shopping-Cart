@@ -56,9 +56,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['issSubmitted'])) {
     }
 }
 
-// echo '<pre>';
-// var_dump($_SESSION['cart']);
-// echo '</pre>';
 require './header.php';
 ?>
 

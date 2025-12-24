@@ -1,9 +1,60 @@
 <?php
 session_start();
 
+// Generate CSRF token
+if (empty($_SESSION['__csrf'])) {
+    $_SESSION['__csrf'] = bin2hex(random_bytes(32));
+}
+
+
+
+// Delete specific cart data from session
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete'])) {
+    // Verify csrf token
+    if (!isset($_SESSION['__csrf']) || !hash_equals($_SESSION['__csrf'], $_POST['__csrf'])) {
+        header('Location: ' . $_SERVER['PHP_SELF']);
+        exit;
+    }
+    $id = (int) $_POST['productId'];
+
+    if (isset($_SESSION['cart'][$id])) {
+        unset($_SESSION['cart'][$id]);
+    }
+
+    header('Location: ' . $_SERVER['PHP_SELF']);
+    exit;
+}
+
+
+// Increment or Decrement in cart
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['minus']) || isset($_POST['plus']))) {
+    // Verify csrf token
+    if (!isset($_SESSION['__csrf']) || !hash_equals($_SESSION['__csrf'], $_POST['__csrf'])) {
+        header('Location: ' . $_SERVER['PHP_SELF']);
+        exit;
+    }
+
+    $id = (int) $_POST['id'];
+
+    if (isset($_POST['minus']) && $_SESSION['cart'][$id]['quantity'] > 1) {
+
+        $_SESSION['cart'][$id]['quantity']--;
+        $_SESSION['cart'][$id]['subTotal'] = $_SESSION['cart'][$id]['price'] * $_SESSION['cart'][$id]['quantity'];
+    }
+
+
+    if (isset($_POST['plus'])) {
+        $_SESSION['cart'][$id]['quantity']++;
+        $_SESSION['cart'][$id]['subTotal'] = $_SESSION['cart'][$id]['price'] * $_SESSION['cart'][$id]['quantity'];
+    }
+
+
+    header('Location: ' . $_SERVER['PHP_SELF']);
+    exit;
+}
+
+
 require './header.php';
-
-
 ?>
 
 <!-- Cart Page Start -->
@@ -24,42 +75,59 @@ require './header.php';
                 </thead>
                 <tbody>
 
-                    <?php foreach ($_SESSION['cart'] as $product): ?>
+                    <?php foreach ($_SESSION['cart'] as $id => $product):
+                        ?>
                     <tr>
                         <th scope="row">
                             <p class="mb-0 py-4"><img width="100"
                                     src="./admin/product/<?= htmlspecialchars($product['image']) ?>" alt=""></p>
                         </th>
                         <td>
-                            <p class="mb-0 py-4"><?= $product['name'] ?></p>
+                            <p class="mb-0 py-4"><?= htmlspecialchars($product['name']) ?></p>
                         </td>
                         <td>
                             <p class="mb-0 py-4"><?= number_format($product['price'], 2) ?> $</p>
                         </td>
-                        <td>
-                            <div class="input-group quantity py-4" style="width: 100px;">
-                                <div class="input-group-btn">
-                                    <button class="btn btn-sm btn-minus rounded-circle bg-light border">
-                                        <i class="fa fa-minus"></i>
-                                    </button>
+
+                        <form method="post" action="<?= htmlspecialchars($_SERVER['PHP_SELF']) ?>">
+                            <input type="hidden" name="__csrf" value="<?= htmlspecialchars($_SESSION['__csrf']) ?>">
+                            <input type="hidden" name="id" value="<?= $id ?>">
+                            <td>
+                                <div class="input-group quantity py-4" style="width: 100px;">
+                                    <div class="input-group-btn">
+                                        <button type="submit" name="minus"
+                                            class="btn btn-sm btn-minus rounded-circle bg-light border">
+                                            <i class="fa fa-minus"></i>
+                                        </button>
+                                    </div>
+
+                                    <input type="text" class="form-control form-control-sm text-center border-0"
+                                        value="<?= $product['quantity'] ?>">
+
+                                    <div class="input-group-btn">
+                                        <button type="submit" name="plus"
+                                            class="btn btn-sm btn-plus rounded-circle bg-light border">
+                                            <i class="fa fa-plus"></i>
+                                        </button>
+                                    </div>
+
                                 </div>
-                                <input type="text" class="form-control form-control-sm text-center border-0"
-                                    value="<?= $product['quantity'] ?>">
-                                <div class="input-group-btn">
-                                    <button class="btn btn-sm btn-plus rounded-circle bg-light border">
-                                        <i class="fa fa-plus"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </td>
+                            </td>
+                        </form>
+
                         <td>
                             <p class="mb-0 py-4"><?= number_format($product['subTotal'], 2) ?> $</p>
                         </td>
-                        <td class="py-4">
-                            <button class="btn btn-md rounded-circle bg-light border">
-                                <i class="fa fa-times text-danger"></i>
-                            </button>
-                        </td>
+                        <form method="post" action="<?= htmlspecialchars($_SERVER['PHP_SELF']) ?>">
+                            <input type="hidden" name="__csrf" value="<?= htmlspecialchars($_SESSION['__csrf']) ?>">
+                            <input type="hidden" name="productId" value="<?= $id ?>">
+                            <td class="py-4">
+                                <button name="delete" class="btn btn-md rounded-circle bg-light border">
+                                    <i class="fa fa-times text-danger"></i>
+                                </button>
+                            </td>
+                        </form>
+
                     </tr>
                     <?php endforeach; ?>
                 </tbody>
