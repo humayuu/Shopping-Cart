@@ -1,6 +1,7 @@
 <?php
 
-require '../config.php';
+require './guard.php';
+
 
 
 $id = htmlspecialchars($_GET['id']);

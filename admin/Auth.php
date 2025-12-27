@@ -110,7 +110,7 @@ class Auth
 
 
     // Function for user loggedIn 
-    public function attempt($table, $email, $password, $redirect)
+    public function attempt($table, $email, $password, $redirect, $role)
     {
         if (!$this->tableExists($table)) return false;
 
@@ -142,6 +142,7 @@ class Auth
             }
             // Store user data to Session variable
             $_SESSION['loggedIn']     = true;
+            $_SESSION['userRole']     = $role;
             $_SESSION['userId']       = $user['id'];
             $_SESSION['userFullname'] = $user['user_fullname'];
             $_SESSION['userEmail']    = $user['user_email'];
@@ -177,13 +178,13 @@ class Auth
 
 
     // Function Authenticate user
-    public function checkUser($redirect)
+    public function checkUser($redirect, $role)
     {
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
 
-        if (!isset($_SESSION['loggedIn']) || $_SESSION['loggedIn'] !== true) {
+        if (!isset($_SESSION['loggedIn']) && $_SESSION['userRole'] == $role || $_SESSION['loggedIn'] !== true) {
             header('Location: ' . $redirect);
             exit;
         }

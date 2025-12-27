@@ -51,7 +51,6 @@
                     <a href="index.php" class="navbar-brand p-0">
                         <h1 class="display-5 text-primary m-0"><i
                                 class="fas fa-shopping-bag text-secondary me-3"></i>Shopping Cart</h1>
-                        <!-- <img src="img/logo.png" alt="Logo"> -->
                     </a>
                 </div>
             </div>
@@ -67,6 +66,26 @@
                         class="text-muted display-5 d-flex align-items-center justify-content-center"><span><i
                                 class="fas fa-shopping-cart"></i></span>
                         <span class="text-dark ms-2">$ <?= number_format($total, 2) ?></span></a>
+                </div>
+            </div>
+            <div class="col-md-4 col-lg-3 text-center text-lg-end">
+                <div class="d-inline-flex gap-2 align-items-center">
+                    <?php if (isset($_SESSION['loggedIn']) !== true): ?>
+                    <a href="register.php"
+                        class="btn btn-primary text-white fs-5 d-flex align-items-center justify-content-center">
+                        <span class="ms-2">Register</span></a>
+                    <a href="login.php"
+                        class="btn btn-primary text-white fs-5 d-flex align-items-center justify-content-center">
+                        <span class=" ms-2">Login</span></a>
+                    <?php else: ?>
+                    <span class="fs-2 fw-bold"><?= $_SESSION['userFullname'] ?></span>
+                    <?php endif ?>
+
+                    <?php if (isset($_SESSION['loggedIn']) == true): ?>
+                    <a href="logout.php"
+                        class="btn btn-primary text-white fs-5 d-flex align-items-center justify-content-center">
+                        <span class=" ms-2">Logout</span></a>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>

@@ -83,13 +83,50 @@
 
                 <li>
                     <a class="has-arrow" href="javascript:;">
-                        <div class="parent-icon"><i class="bi bi-person-fill"></i>
+                        <div class="parent-icon"><i class="bi bi-cart-fill"></i>
                         </div>
                         <div class="menu-title">Manage Products</div>
                     </a>
                     <ul>
                         <li> <a href="index.php"><i class="bi bi-circle"></i>All Products</a>
                         <li> <a href="add.php"><i class="bi bi-circle"></i>Add Products</a>
+                        </li>
+                    </ul>
+                </li>
+
+
+                <li>
+                    <a class="has-arrow" href="javascript:;">
+                        <div class="parent-icon"><i class="bi bi-person-fill"></i>
+                        </div>
+                        <div class="menu-title">Manage User</div>
+                    </a>
+                    <ul>
+                        <li> <a href="#"><i class="bi bi-circle"></i>All User</a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li>
+                    <a class="has-arrow" href="javascript:;">
+                        <div class="parent-icon"><i class="bi bi-wallet-fill"></i>
+                        </div>
+                        <div class="menu-title">Manage Order</div>
+                    </a>
+                    <ul>
+                        <li> <a href="#"><i class="bi bi-circle"></i>All Order</a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li>
+                    <a class="has-arrow" href="javascript:;">
+                        <div class="parent-icon"><i class="bi bi-card-text"></i>
+                        </div>
+                        <div class="menu-title">Manage Coupon</div>
+                    </a>
+                    <ul>
+                        <li> <a href="#"><i class="bi bi-circle"></i>All Coupon</a>
                         </li>
                     </ul>
                 </li>

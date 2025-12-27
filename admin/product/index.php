@@ -1,6 +1,5 @@
 <?php
-require '../config.php';
-
+require './guard.php';
 $sl = 1;
 $table = 'product_tbl';
 $rows = '*';
@@ -23,8 +22,8 @@ $products = $database->selectAll($table, $rows, $join, $where, $order, $limit, $
 
 
 
-require 'header.php';
 
+require 'header.php';
 ?>
 
 <main class="page-content">
@@ -95,6 +94,7 @@ require 'header.php';
             </div>
             <!--end row-->
         </div>
+    </div>
     </div>
 </main>
 

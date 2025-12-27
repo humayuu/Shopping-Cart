@@ -3,7 +3,7 @@ session_start();
 require 'config.php';
 
 $redirect = './product/index.php';
-$conn->loggedIn($redirect);
+$database->loggedIn($redirect);
 
 // Generate CSRF Token
 if (empty($_SESSION['__csrf'])) {
@@ -22,9 +22,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['isSubmitted'])) {
     $table = 'admin_user_tbl';
     $email = htmlspecialchars($_POST['email']);
     $password = $_POST['password'];
+    $role = 'admin';
 
 
-    $conn->attempt($table, $email, $password, $redirect);
+    $conn->attempt($table, $email, $password, $redirect, $role);
 }
 
 

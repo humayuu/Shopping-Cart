@@ -1,6 +1,6 @@
 <?php
-session_start();
-require '../config.php';
+require './guard.php';
+
 
 // Generate CSRF Token
 if (empty($_SESSION['__csrf'])) {
@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['issSubmitted'])) {
     $code = htmlspecialchars($_POST['code']);
     $price = htmlspecialchars($_POST['price']);
     $description = htmlspecialchars($_POST['description']);
-    $image = $database->file('image', '/uploads/product/');
+    $image = $database->file('image', 'uploads/product/');
     $redirect = 'index.php';
 
     // Validations
@@ -64,9 +64,9 @@ require 'header.php';
                         <div class="card border shadow-none w-100">
                             <div class="card-body">
                                 <?php if ($database->getErrors()): ?>
-                                <?php foreach ($database->getErrors() as $error): ?>
-                                <div class="alert alert-danger"><?= $error ?></div>
-                                <?php endforeach; ?>
+                                    <?php foreach ($database->getErrors() as $error): ?>
+                                        <div class="alert alert-danger"><?= $error ?></div>
+                                    <?php endforeach; ?>
                                 <?php endif; ?>
                                 <form method="post" action="<?= htmlspecialchars($_SERVER['PHP_SELF']) ?>"
                                     class="row g-3" enctype="multipart/form-data">

@@ -1,7 +1,6 @@
 <?php
-session_start();
+require './guard.php';
 
-require '../config.php';
 
 // Generate CSRF Token
 if (empty($_SESSION['__csrf'])) {
