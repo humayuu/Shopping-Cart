@@ -258,37 +258,41 @@ class Database extends Auth
         $totalRows =   $stmt->fetch()['total'];
         $totalPages = ceil($totalRows / $limit);
 
-        echo '<nav aria-label="Page navigation example">
+
+        if ($totalRows > 5) {
+
+            echo '<nav aria-label="Page navigation example">
         <ul class="pagination justify-content-end">';
 
-        if ($pageNo > 1) {
-            echo ' <li class="page-item">
+            if ($pageNo > 1) {
+                echo ' <li class="page-item">
                 <a href="?page=' . ($pageNo - 1) . '" class="page-link">Previous</a>
             </li>';
-        } else {
-            echo '<li class="page-item disabled">
+            } else {
+                echo '<li class="page-item disabled">
                 <span class="page-link">Previous</span>
             </li>';
-        }
+            }
 
-        for ($i = 1; $i <= $totalPages; $i++) {
-            $activeClass = ($i == $pageNo) ? 'active' : '';
-            echo "<li class='page-item'><a class='page-link " . $activeClass . "' href='?page=" . $i . "'>$i</a></li>";
-        }
+            for ($i = 1; $i <= $totalPages; $i++) {
+                $activeClass = ($i == $pageNo) ? 'active' : '';
+                echo "<li class='page-item'><a class='page-link " . $activeClass . "' href='?page=" . $i . "'>$i</a></li>";
+            }
 
 
-        if ($pageNo < $totalPages) {
-            echo ' <li class="page-item">
+            if ($pageNo < $totalPages) {
+                echo ' <li class="page-item">
                 <a href="?page=' . ($pageNo + 1) . '" class="page-link">Next</a>
             </li>';
-        } else {
-            echo '<li class="page-item disabled">
+            } else {
+                echo '<li class="page-item disabled">
                 <span class="page-link">Next</span>
             </li>';
-        }
+            }
 
-        echo '</ul>
+            echo '</ul>
           </nav>';
+        }
     }
 
     /**

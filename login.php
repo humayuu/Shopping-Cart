@@ -84,7 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['isSubmitted'])) {
 
                             <div class="d-grid">
                                 <button type="submit" name="isSubmitted" class="btn btn-primary btn-lg">
-                                    <i class="bi bi-box-arrow-in-right me-2"></i>Login Your Account
+                                    <i class="bi bi-box-arrow-in-right me-2"></i>Log in
                                 </button>
                                 <a href="./register.php" class="btn btn-outline-dark mt-2 fs-6">
                                     <i class="bi bi-box-arrow-in-right me-2"></i>Create an Account

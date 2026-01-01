@@ -1,6 +1,6 @@
 <?php
 
-require './guard.php';
+require '../guard.php';
 
 
 

@@ -1,5 +1,5 @@
 <?php
-require './guard.php';
+require '../guard.php';
 $sl = 1;
 $table = 'product_tbl';
 $rows = '*';
@@ -23,7 +23,7 @@ $products = $database->selectAll($table, $rows, $join, $where, $order, $limit, $
 
 
 
-require 'header.php';
+require '../layout/header.php';
 ?>
 
 <main class="page-content">
@@ -54,33 +54,33 @@ require 'header.php';
                                     </thead>
                                     <tbody>
                                         <?php foreach ($products as $product): ?>
-                                            <tr>
-                                                <th scope="row"><?= $sl++ ?></th>
-                                                <td><img src="<?= htmlspecialchars($product['product_image']) ?>"
-                                                        width="120" alt="Product image"></td>
-                                                <td><?= htmlspecialchars($product['product_name']) ?></td>
-                                                <td><?= htmlspecialchars($product['product_code']) ?></td>
-                                                <td><?= '$' .  number_format(htmlspecialchars($product['product_price']), 2) ?>
-                                                </td>
-                                                <td><?= date('d-m-Y', strtotime($product['created_at'])) ?></td>
-                                                <td>
-                                                    <div class="d-flex align-items-center gap-3 fs-6">
-                                                        <!-- Edit Button -->
-                                                        <a href="edit.php?id=<?= $product['id'] ?>" class="text-primary"
-                                                            data-bs-toggle="tooltip" data-bs-placement="bottom"
-                                                            title="Edit info">
-                                                            <i class="bi bi-pencil-fill"></i>
-                                                        </a>
+                                        <tr>
+                                            <th scope="row"><?= $sl++ ?></th>
+                                            <td><img src="<?= htmlspecialchars($product['product_image']) ?>"
+                                                    width="120" alt="Product image"></td>
+                                            <td><?= htmlspecialchars($product['product_name']) ?></td>
+                                            <td><?= htmlspecialchars($product['product_code']) ?></td>
+                                            <td><?= '$' .  number_format(htmlspecialchars($product['product_price']), 2) ?>
+                                            </td>
+                                            <td><?= date('d-m-Y', strtotime($product['created_at'])) ?></td>
+                                            <td>
+                                                <div class="d-flex align-items-center gap-3 fs-6">
+                                                    <!-- Edit Button -->
+                                                    <a href="edit.php?id=<?= $product['id'] ?>" class="text-primary"
+                                                        data-bs-toggle="tooltip" data-bs-placement="bottom"
+                                                        title="Edit info">
+                                                        <i class="bi bi-pencil-fill"></i>
+                                                    </a>
 
-                                                        <!-- Delete Button -->
-                                                        <a href="delete.php?id=<?= $product['id'] ?>" class="text-danger"
-                                                            data-bs-toggle="tooltip" data-bs-placement="bottom"
-                                                            title="Delete">
-                                                            <i class="bi bi-trash-fill"></i>
-                                                        </a>
-                                                    </div>
-                                                </td>
-                                            </tr>
+                                                    <!-- Delete Button -->
+                                                    <a href="delete.php?id=<?= $product['id'] ?>" class="text-danger"
+                                                        data-bs-toggle="tooltip" data-bs-placement="bottom"
+                                                        title="Delete">
+                                                        <i class="bi bi-trash-fill"></i>
+                                                    </a>
+                                                </div>
+                                            </td>
+                                        </tr>
                                         <?php endforeach; ?>
                                     </tbody>
                                 </table>
@@ -98,4 +98,4 @@ require 'header.php';
     </div>
 </main>
 
-<?php require 'footer.php'; ?>
+<?php require '../layout/footer.php'; ?>

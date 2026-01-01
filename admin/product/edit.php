@@ -1,5 +1,5 @@
 <?php
-require './guard.php';
+require '../guard.php';
 
 
 // Generate CSRF Token
@@ -76,7 +76,7 @@ $product = $database->select($table, $rows, $join, $where, $order, $limit);
 
 
 
-require 'header.php';
+require '../layout/header.php';
 ?>
 
 <main class="page-content">
@@ -147,4 +147,4 @@ require 'header.php';
     </div>
 </main>
 
-<?php require 'footer.php'; ?>
+<?php require '../layout/footer.php'; ?>

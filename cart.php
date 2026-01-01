@@ -1,5 +1,6 @@
 <?php
 session_start();
+require './admin/config.php';
 
 // Generate CSRF token
 if (empty($_SESSION['__csrf'])) {
@@ -54,6 +55,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['minus']) || isset($_
 }
 
 
+
+// Apply Coupon
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submitted'])) {
+    // Verify csrf token
+    if (!isset($_SESSION['__csrf']) || !hash_equals($_SESSION['__csrf'], $_POST['__csrf'])) {
+        header('Location: ' . $_SERVER['PHP_SELF']);
+        exit;
+    }
+
+    $today = strtotime(date('Y-m-d'));
+    $couponCode = htmlspecialchars($_POST['code']);
+    $table = 'coupon_tbl';
+    $rows = '*';
+    $join = null;
+    $where = "coupon_name = '$couponCode' AND coupon_validity >= $today";
+    $order = null;
+    $limit = null;
+    $offset = null;
+
+    $coupon = $database->select($table, $rows, $join, $where, $order, $limit, $offset);
+
+    if ($coupon) {
+        $_SESSION['discount'] = $coupon['coupon_discount'];
+    }
+
+    header('Location: ' . $_SERVER['PHP_SELF']);
+    exit;
+}
+
+
 require './header.php';
 ?>
 
@@ -94,12 +126,14 @@ require './header.php';
                             <input type="hidden" name="id" value="<?= $id ?>">
                             <td>
                                 <div class="input-group quantity py-4" style="width: 100px;">
+                                    <?php if ($product['quantity'] > 1): ?>
                                     <div class="input-group-btn">
                                         <button type="submit" name="minus"
                                             class="btn btn-sm btn-minus rounded-circle bg-light border">
                                             <i class="fa fa-minus"></i>
                                         </button>
                                     </div>
+                                    <?php endif; ?>
 
                                     <input type="text" class="form-control form-control-sm text-center border-0"
                                         value="<?= $product['quantity'] ?>">
@@ -136,10 +170,16 @@ require './header.php';
             <div class="alert alert-danger">No Product Found</div>
             <?php endif; ?>
         </div>
-        <div class="mt-5">
-            <input type="text" class="border-0 border-bottom rounded me-5 py-3 mb-4" placeholder="Coupon Code">
-            <button class="btn btn-primary rounded-pill px-4 py-3" type="button">Apply Coupon</button>
-        </div>
+        <form method="post" action="<?= htmlspecialchars($_SERVER['PHP_SELF']) ?>">
+            <input type="hidden" name="__csrf" value="<?= htmlspecialchars($_SESSION['__csrf']) ?>">
+            <div class="mt-5">
+                <input type="text" name="code" class="border-0 border-bottom rounded me-5 py-3 mb-4"
+                    placeholder="Coupon Code">
+                <button name="submitted" class="btn btn-primary rounded-pill px-4 py-3" type="submit">Apply
+                    Coupon</button>
+            </div>
+        </form>
+
         <div class="row g-4 justify-content-end">
             <div class="col-8"></div>
             <div class="col-sm-8 col-md-7 col-lg-6 col-xl-4">
@@ -148,8 +188,14 @@ require './header.php';
                         <h5 class="mb-0 ps-4 me-4 fs-3 mt-2">Total</h5>
                         <p class="mb-0 pe-4 fw-bold fs-3">$<?= number_format($total, 2) ?></p>
                     </div>
+                    <?php if (isset($_SESSION['userId'])):  ?>
                     <button class="btn btn-primary rounded-pill px-4 py-3 text-uppercase mb-4 ms-4"
                         type="button">Proceed Checkout</button>
+                    <?php else: ?>
+                    <a href="login.php"
+                        class="btn btn-primary text-white m-5 p-2 fs-5 d-flex align-items-center justify-content-center">
+                        <span>Please Login Your Account First</span></a>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
