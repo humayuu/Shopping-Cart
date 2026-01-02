@@ -72,50 +72,50 @@ require './header.php';
                 <div id="tab-1" class="tab-pane fade show p-0 active">
                     <div class="row g-4">
                         <?php if ($products): ?>
-                            <?php foreach ($products as $product): ?>
-                                <div class="col-md-6 col-lg-4 col-xl-3">
-                                    <div class="product-item rounded wow fadeInUp shadow-sm" data-wow-delay="0.1s">
-                                        <form method="post" action="<?= htmlspecialchars($_SERVER['PHP_SELF']) ?>">
-                                            <input type="hidden" name="id" value="<?= htmlspecialchars($product['id']) ?>">
-                                            <input type="hidden" name="name"
-                                                value="<?= htmlspecialchars($product['product_name']) ?>">
-                                            <input type="hidden" name="price"
-                                                value="<?= htmlspecialchars($product['product_price']) ?>">
-                                            <input type="hidden" name="image"
-                                                value="<?= htmlspecialchars($product['product_image']) ?>">
-                                            <input type="hidden" name="__csrf"
-                                                value="<?= htmlspecialchars($_SESSION['__csrf']) ?>">
+                        <?php foreach ($products as $product): ?>
+                        <div class="col-md-6 col-lg-4 col-xl-3">
+                            <div class="product-item rounded wow fadeInUp shadow-sm" data-wow-delay="0.1s">
+                                <form method="post" action="<?= htmlspecialchars($_SERVER['PHP_SELF']) ?>">
+                                    <input type="hidden" name="id" value="<?= htmlspecialchars($product['id']) ?>">
+                                    <input type="hidden" name="name"
+                                        value="<?= htmlspecialchars($product['product_name']) ?>">
+                                    <input type="hidden" name="price"
+                                        value="<?= htmlspecialchars($product['product_price']) ?>">
+                                    <input type="hidden" name="image"
+                                        value="<?= htmlspecialchars($product['product_image']) ?>">
+                                    <input type="hidden" name="__csrf"
+                                        value="<?= htmlspecialchars($_SESSION['__csrf']) ?>">
 
-                                            <div class="product-item-inner border rounded">
-                                                <div class="product-item-inner-item p-3">
-                                                    <img src="./admin/product/<?= htmlspecialchars($product['product_image']) ?>"
-                                                        class="img-fluid w-100" style="height: 200px; object-fit: contain;"
-                                                        alt="<?= htmlspecialchars($product['product_name']) ?>">
-                                                </div>
-                                                <div class="text-center rounded-bottom p-4 pt-0">
-                                                    <h5 class="mb-2" style="height: 48px; overflow: hidden;">
-                                                        <?= htmlspecialchars($product['product_name']) ?></h5>
-                                                    <span
-                                                        class="text-primary fs-5 fw-bold">$<?= number_format($product['product_price'], 2) ?></span>
-                                                </div>
-                                            </div>
-
-                                            <div class="product-item-add text-center p-3">
-                                                <button name="issSubmitted" type="submit"
-                                                    class="btn btn-primary border-secondary rounded-pill py-2 px-4 w-100">
-                                                    <i class="fas fa-shopping-cart me-2"></i> Add To Cart
-                                                </button>
-                                            </div>
-                                        </form>
-                                        <!-- END FORM -->
-
+                                    <div class="product-item-inner border rounded">
+                                        <div class="product-item-inner-item p-3">
+                                            <img src="./admin/product/<?= htmlspecialchars($product['product_image']) ?>"
+                                                class="img-fluid w-100" style="height: 200px; object-fit: contain;"
+                                                alt="<?= htmlspecialchars($product['product_name']) ?>">
+                                        </div>
+                                        <div class="text-center rounded-bottom p-4 pt-0">
+                                            <h5 class="mb-2" style="height: 48px; overflow: hidden;">
+                                                <?= htmlspecialchars($product['product_name']) ?></h5>
+                                            <span
+                                                class="text-primary fs-5 fw-bold">$<?= number_format($product['product_price'], 2) ?></span>
+                                        </div>
                                     </div>
-                                </div>
-                            <?php endforeach; ?>
-                        <?php else: ?>
-                            <div class="col-12">
-                                <div class="alert alert-danger">No Product Found!</div>
+
+                                    <div class="product-item-add text-center p-3">
+                                        <button name="issSubmitted" type="submit"
+                                            class="btn btn-primary border-secondary rounded-pill py-2 px-4 w-100">
+                                            <i class="fas fa-shopping-cart me-2"></i> Add To Cart
+                                        </button>
+                                    </div>
+                                </form>
+                                <!-- END FORM -->
+
                             </div>
+                        </div>
+                        <?php endforeach; ?>
+                        <?php else: ?>
+                        <div class="col-12">
+                            <div class="alert alert-danger">No Product Found!</div>
+                        </div>
                         <?php endif; ?>
                     </div>
                 </div>

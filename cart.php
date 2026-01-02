@@ -78,13 +78,45 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submitted'])) {
     $coupon = $database->select($table, $rows, $join, $where, $order, $limit, $offset);
 
     if ($coupon) {
-        $_SESSION['discount'] = $coupon['coupon_discount'];
+        $percentage = $coupon['coupon_discount'];
+        $discountedTotal = 0;
+
+        foreach ($_SESSION['cart'] as $id => $product) {
+            $discountAmount = ($product['subTotal'] * $percentage) / 100;
+            $discountedSubTotal = $product['subTotal'] - $discountAmount;
+            $discountedTotal += $discountedSubTotal;
+        }
+
+        // Store the discount info in session
+        $_SESSION['coupon'] = [
+            'code' => $couponCode,
+            'discount' => $percentage,
+            'total' => $discountedTotal
+        ];
     }
 
     header('Location: ' . $_SERVER['PHP_SELF']);
     exit;
 }
 
+// Calculate cart total
+$total = 0;
+$discount = 0;
+$finalTotal = 0;
+
+if (!empty($_SESSION['cart'])) {
+    foreach ($_SESSION['cart'] as $product) {
+        $total += $product['subTotal'];
+    }
+}
+
+// Check if coupon is applied
+if (isset($_SESSION['coupon'])) {
+    $discount = $total - $_SESSION['coupon']['total'];
+    $finalTotal = $_SESSION['coupon']['total'];
+} else {
+    $finalTotal = $total;
+}
 
 require './header.php';
 ?>
@@ -179,24 +211,51 @@ require './header.php';
                     Coupon</button>
             </div>
         </form>
+        <?php
+        // Calculate cart total
+        $total = 0;
+        if (!empty($_SESSION['cart'])) {
+            foreach ($_SESSION['cart'] as $product) {
+                $total += $product['subTotal'];
+            }
+        }
+        ?>
+        <div class="col-sm-8 col-md-7 col-lg-6 col-xl-4">
+            <div class="bg-light rounded">
+                <div class="p-4">
+                    <h5 class="mb-3">Cart Total</h5>
 
-        <div class="row g-4 justify-content-end">
-            <div class="col-8"></div>
-            <div class="col-sm-8 col-md-7 col-lg-6 col-xl-4">
-                <div class="bg-light rounded">
-                    <div class="py-4 mb-4 border-top border-bottom d-flex justify-content-between">
-                        <h5 class="mb-0 ps-4 me-4 fs-3 mt-2">Total</h5>
-                        <p class="mb-0 pe-4 fw-bold fs-3">$<?= number_format($total, 2) ?></p>
+                    <!-- Subtotal -->
+                    <div class="d-flex justify-content-between mb-2">
+                        <p class="mb-0">Subtotal:</p>
+                        <p class="mb-0">$<?= number_format($total, 2) ?></p>
                     </div>
-                    <?php if (isset($_SESSION['userId'])):  ?>
-                    <button class="btn btn-primary rounded-pill px-4 py-3 text-uppercase mb-4 ms-4"
-                        type="button">Proceed Checkout</button>
-                    <?php else: ?>
-                    <a href="login.php"
-                        class="btn btn-primary text-white m-5 p-2 fs-5 d-flex align-items-center justify-content-center">
-                        <span>Please Login Your Account First</span></a>
+
+                    <!-- Coupon Discount -->
+                    <?php if (isset($_SESSION['coupon'])): ?>
+                    <div class="d-flex justify-content-between mb-2 text-success">
+                        <p class="mb-0">Coupon (<?= htmlspecialchars($_SESSION['coupon']['code']) ?> -
+                            <?= $_SESSION['coupon']['discount'] ?>%):</p>
+                        <p class="mb-0">-$<?= number_format($discount, 2) ?></p>
+                    </div>
                     <?php endif; ?>
+
+                    <!-- Total -->
+                    <div class="py-3 border-top border-bottom d-flex justify-content-between">
+                        <h5 class="mb-0 fs-3">Total:</h5>
+                        <p class="mb-0 fw-bold fs-3">$<?= number_format($finalTotal, 2) ?></p>
+                    </div>
                 </div>
+
+                <?php if (isset($_SESSION['userId'])): ?>
+                <button class="btn btn-primary rounded-pill px-4 py-3 text-uppercase mb-4 ms-4" type="button">Proceed
+                    Checkout</button>
+                <?php else: ?>
+                <a href="login.php"
+                    class="btn btn-primary text-white m-5 p-2 fs-5 d-flex align-items-center justify-content-center">
+                    <span>Please Login Your Account First</span>
+                </a>
+                <?php endif; ?>
             </div>
         </div>
     </div>

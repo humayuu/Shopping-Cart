@@ -71,20 +71,20 @@
             <div class="col-md-4 col-lg-3 text-center text-lg-end">
                 <div class="d-inline-flex gap-2 align-items-center">
                     <?php if (isset($_SESSION['loggedIn']) !== true): ?>
-                    <a href="register.php"
-                        class="btn btn-primary text-white fs-5 d-flex align-items-center justify-content-center">
-                        <span class="ms-2">Register</span></a>
-                    <a href="login.php"
-                        class="btn btn-primary text-white fs-5 d-flex align-items-center justify-content-center">
-                        <span class=" ms-2">Login</span></a>
+                        <a href="register.php"
+                            class="btn btn-primary text-white fs-5 d-flex align-items-center justify-content-center">
+                            <span class="ms-2">Register</span></a>
+                        <a href="login.php"
+                            class="btn btn-primary text-white fs-5 d-flex align-items-center justify-content-center">
+                            <span class=" ms-2">Login</span></a>
                     <?php else: ?>
-                    <span class="fs-2 fw-bold"><?= $_SESSION['userFullname'] ?></span>
+                        <span class="fs-2 fw-bold"><?= $_SESSION['userFullname'] ?></span>
                     <?php endif ?>
 
                     <?php if (isset($_SESSION['loggedIn']) == true): ?>
-                    <a href="logout.php"
-                        class="btn btn-primary text-white fs-5 d-flex align-items-center justify-content-center">
-                        <span class=" ms-2">Logout</span></a>
+                        <a href="logout.php"
+                            class="btn btn-primary text-white fs-5 d-flex align-items-center justify-content-center">
+                            <span class=" ms-2">Logout</span></a>
                     <?php endif; ?>
                 </div>
             </div>

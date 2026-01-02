@@ -106,19 +106,6 @@
                         </li>
                     </ul>
                 </li>
-
-                <li>
-                    <a class="has-arrow" href="javascript:;">
-                        <div class="parent-icon"><i class="bi bi-wallet-fill"></i>
-                        </div>
-                        <div class="menu-title">Manage Order</div>
-                    </a>
-                    <ul>
-                        <li> <a href="../orders/index.php"><i class="bi bi-circle"></i>All Order</a>
-                        </li>
-                    </ul>
-                </li>
-
                 <li>
                     <a class="has-arrow" href="javascript:;">
                         <div class="parent-icon"><i class="bi bi-card-text"></i>

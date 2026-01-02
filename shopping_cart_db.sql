@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 01, 2026 at 12:36 PM
+-- Generation Time: Jan 02, 2026 at 11:05 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -59,25 +59,6 @@ CREATE TABLE `coupon_tbl` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `order_tbl`
---
-
-CREATE TABLE `order_tbl` (
-  `id` int(11) NOT NULL,
-  `product_id` varchar(50) DEFAULT NULL,
-  `user_id` varchar(50) NOT NULL,
-  `fullname` varchar(255) NOT NULL,
-  `email` varchar(255) NOT NULL,
-  `phone` varchar(100) NOT NULL,
-  `address` text NOT NULL,
-  `order_qty` varchar(255) DEFAULT NULL,
-  `total_amount` varchar(255) DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `product_tbl`
 --
 
@@ -116,12 +97,6 @@ ALTER TABLE `coupon_tbl`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `order_tbl`
---
-ALTER TABLE `order_tbl`
-  ADD PRIMARY KEY (`id`);
-
---
 -- Indexes for table `product_tbl`
 --
 ALTER TABLE `product_tbl`
@@ -141,12 +116,6 @@ ALTER TABLE `user_tbl`
 -- AUTO_INCREMENT for table `coupon_tbl`
 --
 ALTER TABLE `coupon_tbl`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `order_tbl`
---
-ALTER TABLE `order_tbl`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
